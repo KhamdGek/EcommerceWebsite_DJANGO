@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <!--Main layout-->
+  <main>
+    <div class="container pt-4 mt-4 mb-3 pb-4">
+          <div class="table-responsive table-dark ">
+                <table class="table text-light">
+                    <h2 class="text-center bg-white text-dark pb-4 ">Order Summary</h2>
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Item Title</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Total Price</th>
+                        </tr>
+                        </thead>
+                        {%for Order_item in object.items.all%}
+                        <tbody>
+                        <tr class="font-weight-bold bg-warning text-dark ">
+                            <th  scope="row ">{{forloop.counter}}</th>
+                            <td>{{ Order_item.item.title}}</td>
+                            <td>
+                              <a href="{% url 'core:add_item_to_cart' Order_item.item.slug %}">
+                              <i class="far fa-plus-square"></i></a>
+                              {{ Order_item.quantity}}
+                              <a href="{% url 'core:remove_Item_from_cart' Order_item.item.slug %}"><i class="far fa-minus-square"></i></a>
+                            </td>                           
+                            <td>{{ Order_item.item.price}}</td>
+                            <td>
+                                {%if Order_item.item.discount_price%}
+                                  rs{{Order_item.get_TotalDiscounted_itemPrice}}
+                                  <span class="badge badge-dark ml-2">Saving rs{{Order_item.get_amount_saved}}</span>
+                                {%else%}
+                                {{Order_item.get_Total_itemPrice}}
+                                {%endif%}
+                            </td>
+                        </tr>
+                        </tbody>
+                        {%endfor%}
+                        <tr>
+                          <td colspan="4" class="ml-5 pl-5 text-center font-weight-bold">Order total </td>
+                          <td class="font-weight-bold">
+                            rs {{object.get_Total_order_price}}
+                          </td>
+                        </tr>
+                </table>
+          </div>
+    </div>
+    <div class="container col-6 pt-4 mt-4 mb-3 pb-4" >
+      <a type="button" class="btn btn-lg btn-warning pull-right" href="/" >Continue Shopping</a>
+      <a type="button" class="btn btn-dark btn-lg pull-right" href="/checkout/">Checkout</a>
+    </div>
+            
+  </main>
+  <!--Main layout-->
+{% endblock content %}
+  
